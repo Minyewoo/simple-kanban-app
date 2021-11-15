@@ -28,16 +28,16 @@ class _LoginFormState extends State<LoginForm> {
     return Form(
       key: _formKey,
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        buildUsernameFormField(localizations!),
+        _buildUsernameFormField(localizations!),
         const SizedBox(height: 20),
-        buildPasswordFormField(localizations),
+        _buildPasswordFormField(localizations),
         const SizedBox(height: 40),
-        buildSubmitButton(themeData, localizations),
+        _buildSubmitButton(themeData, localizations),
       ]),
     );
   }
 
-  MaterialButton buildSubmitButton(
+  MaterialButton _buildSubmitButton(
       ThemeData themeData, AppLocalizations localizations) {
     return MaterialButton(
       onPressed: () {
@@ -64,7 +64,7 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  TextFormField buildPasswordFormField(AppLocalizations localizations) {
+  TextFormField _buildPasswordFormField(AppLocalizations localizations) {
     return TextFormField(
       onSaved: (newValue) => password = newValue!,
       validator: (value) {
@@ -85,7 +85,7 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  TextFormField buildUsernameFormField(AppLocalizations localizations) {
+  TextFormField _buildUsernameFormField(AppLocalizations localizations) {
     return TextFormField(
       onSaved: (newValue) => username = newValue!,
       keyboardType: TextInputType.name,

@@ -43,36 +43,36 @@ class _KanbanPageState extends State<KanbanPage> {
           }
 
           if (state is CardsRequested) {
-            return buildLoadingIndication(context);
+            return _buildLoadingIndication(context);
           }
 
           if (state is CardsLoaded) {
-            return buildKanbanContent(context, localizations, state);
+            return _buildKanbanContent(context, localizations, state);
           }
 
-          return buildSomethingWentWrongIndication(localizations);
+          return _buildSomethingWentWrongIndication(localizations);
         },
       ),
     );
   }
 
-  DefaultTabController buildKanbanContent(BuildContext context,
+  DefaultTabController _buildKanbanContent(BuildContext context,
       AppLocalizations? localizations, CardsLoaded state) {
     return DefaultTabController(
       length: tabIndexes.length,
       child: Scaffold(
         appBar: AppBar(
           actions: [
-            buildLogOutButton(context),
+            _buildLogOutButton(context),
           ],
-          bottom: buildTabBar(localizations),
+          bottom: _buildTabBar(localizations),
         ),
-        body: buildTabsContent(state, localizations),
+        body: _buildTabsContent(state, localizations),
       ),
     );
   }
 
-  Scaffold buildSomethingWentWrongIndication(AppLocalizations? localizations) {
+  Scaffold _buildSomethingWentWrongIndication(AppLocalizations? localizations) {
     return Scaffold(
       body: Center(
         child: Text(localizations!.smthWentWrong),
@@ -80,7 +80,7 @@ class _KanbanPageState extends State<KanbanPage> {
     );
   }
 
-  Scaffold buildLoadingIndication(BuildContext context) {
+  Scaffold _buildLoadingIndication(BuildContext context) {
     return Scaffold(
       body: Container(
         color: Theme.of(context).backgroundColor.withOpacity(0.9),
@@ -91,7 +91,7 @@ class _KanbanPageState extends State<KanbanPage> {
     );
   }
 
-  TabBarView buildTabsContent(
+  TabBarView _buildTabsContent(
       CardsLoaded state, AppLocalizations? localizations) {
     return TabBarView(
       children: tabIndexes
@@ -99,7 +99,7 @@ class _KanbanPageState extends State<KanbanPage> {
             (row) => ListView(
               children: state.cards
                   .where((card) => card.row == row)
-                  .map((card) => buildCard(card, localizations!))
+                  .map((card) => _buildCard(card, localizations!))
                   .toList(),
             ),
           )
@@ -107,13 +107,13 @@ class _KanbanPageState extends State<KanbanPage> {
     );
   }
 
-  TabBar buildTabBar(AppLocalizations? localizations) {
+  TabBar _buildTabBar(AppLocalizations? localizations) {
     return TabBar(
       tabs: tabIndexes
           .map(
             (row) => Tab(
               child: Text(
-                mapKanbanRowToString(row, localizations!),
+                _mapKanbanRowToString(row, localizations!),
                 maxLines: 1,
                 softWrap: false,
                 overflow: TextOverflow.fade,
@@ -124,7 +124,7 @@ class _KanbanPageState extends State<KanbanPage> {
     );
   }
 
-  Widget buildLogOutButton(BuildContext context) {
+  Widget _buildLogOutButton(BuildContext context) {
     return InkWell(
       onTap: () => context.read<AuthBloc>().add(const LogOut()),
       child: const Padding(
@@ -134,7 +134,7 @@ class _KanbanPageState extends State<KanbanPage> {
     );
   }
 
-  String mapKanbanRowToString(KanbanRow row, AppLocalizations localizations) {
+  String _mapKanbanRowToString(KanbanRow row, AppLocalizations localizations) {
     switch (row) {
       case KanbanRow.onHold:
         return localizations.onHold;
@@ -147,7 +147,7 @@ class _KanbanPageState extends State<KanbanPage> {
     }
   }
 
-  Widget buildCard(KanbanCard card, AppLocalizations localizations) {
+  Widget _buildCard(KanbanCard card, AppLocalizations localizations) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: ListTile(

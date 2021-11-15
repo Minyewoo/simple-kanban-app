@@ -29,12 +29,12 @@ class LoginPage extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          final defaultContent = [buildLoginPage()];
+          final defaultContent = [_buildLoginPage()];
           if (state is AuthTokenRequested || state is AuthTokenReceived) {
             return Stack(
               children: [
                 ...defaultContent,
-                buildSigningInOverlay(themeData),
+                _buildSigningInOverlay(themeData),
               ],
             );
           }
@@ -46,7 +46,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Container buildSigningInOverlay(ThemeData themeData) {
+  Container _buildSigningInOverlay(ThemeData themeData) {
     return Container(
       color: themeData.backgroundColor.withOpacity(0.9),
       child: const Center(
@@ -55,7 +55,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget buildLoginPage() {
+  Widget _buildLoginPage() {
     return const Center(
       child: Padding(
         padding: EdgeInsets.all(12),
