@@ -1,0 +1,15 @@
+{
+    "smthWentWrong" : "Something went wrong",
+    "onHold": "On hold",
+    "inProgress" : "In progress",
+    "needsReview" : "Needs review",
+    "approved" : "Approved",
+    "id" : "ID",
+    "xIsEmpty" : "%s is empty",
+    "minimumXSymbols" : "Minimum %d symbols required",
+    "password" : "Password",
+    "enterX" : "Enter your %s",
+    "username" : "Username",
+    "xIsInvalid" : "%s is invalid",
+    "logIn" : "Log In"
+}

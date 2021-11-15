@@ -1,0 +1,15 @@
+{
+    "smthWentWrong" : "Что-то пошло не так",
+    "onHold": "Удержано",
+    "inProgress" : "В процессе",
+    "needsReview" : "Ожидает проверки",
+    "approved" : "Одобрено",
+    "id" : "ID",
+    "xIsEmpty" : "%s не заполнен",
+    "minimumXSymbols" : "Нужно ввести минимум %d символов",
+    "password" : "Пароль",
+    "enterX" : "Введите %s",
+    "username" : "Ник",
+    "xIsInvalid" : "%s некорректен",
+    "logIn" : "Войти"
+}
