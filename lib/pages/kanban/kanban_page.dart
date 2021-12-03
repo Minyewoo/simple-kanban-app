@@ -43,22 +43,24 @@ class _KanbanPageState extends State<KanbanPage> {
             getIt<CardsBloc>().add(const GetCards());
           }
 
+          Widget content = _buildSomethingWentWrongIndication(localizations);
+
           if (state is CardsRequested) {
-            return _buildLoadingIndication(Theme.of(context));
+            content = _buildLoadingIndication(Theme.of(context));
           }
 
           if (state is CardsLoaded) {
-            return _buildKanbanContent(localizations, state);
+            content = _buildTabsContent(state, localizations);
           }
 
-          return _buildSomethingWentWrongIndication(localizations);
+          return _buildBodyWithContent(localizations, content);
         },
       ),
     );
   }
 
-  DefaultTabController _buildKanbanContent(
-      AppLocalizations? localizations, CardsLoaded state) {
+  DefaultTabController _buildBodyWithContent(
+      AppLocalizations? localizations, Widget content) {
     return DefaultTabController(
       length: tabIndexes.length,
       child: Scaffold(
@@ -68,27 +70,20 @@ class _KanbanPageState extends State<KanbanPage> {
           ],
           bottom: _buildTabBar(localizations),
         ),
-        body: _buildTabsContent(state, localizations),
+        body: content,
       ),
     );
   }
 
-  Scaffold _buildSomethingWentWrongIndication(AppLocalizations? localizations) {
-    return Scaffold(
-      body: Center(
-        child: Text(localizations!.smthWentWrong),
-      ),
+  Center _buildSomethingWentWrongIndication(AppLocalizations? localizations) {
+    return Center(
+      child: Text(localizations!.smthWentWrong),
     );
   }
 
-  Scaffold _buildLoadingIndication(ThemeData theme) {
-    return Scaffold(
-      body: Container(
-        color: theme.backgroundColor.withOpacity(0.9),
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
+  Center _buildLoadingIndication(ThemeData theme) {
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 
@@ -97,11 +92,14 @@ class _KanbanPageState extends State<KanbanPage> {
     return TabBarView(
       children: tabIndexes
           .map(
-            (row) => ListView(
-              children: state.cards
-                  .where((card) => card.row == row)
-                  .map((card) => _buildCard(card, localizations!))
-                  .toList(),
+            (row) => RefreshIndicator(
+              onRefresh: () async => getIt<CardsBloc>().add(const GetCards()),
+              child: ListView(
+                children: state.cards
+                    .where((card) => card.row == row)
+                    .map((card) => _buildCard(card, localizations!))
+                    .toList(),
+              ),
             ),
           )
           .toList(),
