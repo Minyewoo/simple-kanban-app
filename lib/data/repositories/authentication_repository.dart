@@ -10,22 +10,25 @@ abstract class AuthenticationRepository {
 
 class ApiAuthenticationRepository implements AuthenticationRepository {
   final _dio = Dio();
-  final _loginPath = 'https://trello.backend.tests.nekidaem.ru/api/v1/users/login/';
+  final _loginPath =
+      'https://trello.backend.tests.nekidaem.ru/api/v1/users/login/';
 
   @override
   Future<AbstractResult> getToken(String username, String password) async {
     try {
       final data = {'username': username, 'password': password};
 
-      final response = await _dio.post(
-          _loginPath,
-          data: data);
+      final response = await _dio.post(_loginPath, data: data);
 
       return ResultOf.successful(Token.fromJson(response.data));
     } on DioError catch (e) {
       final failure = Failure(describeEnum(e.type));
       if (e.response != null) {
-        failure.data['response_data'] = e.response!.data.toString();
+        final serializedErrors = (e.response!.data as Map<String, dynamic>).map(
+            (key, value) => MapEntry(
+                key, value is List ? value.join('\n') : value.toString()));
+
+        failure.data.addAll(serializedErrors);
       }
       failure.data['message'] = e.message;
 

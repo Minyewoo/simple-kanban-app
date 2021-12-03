@@ -1,5 +1,3 @@
-import 'package:kanban/data/repositories/result/failure.dart';
-
 import 'failure.dart';
 
 abstract class AbstractResult {

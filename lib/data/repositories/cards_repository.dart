@@ -21,13 +21,19 @@ class ApiCardsRepository implements CardsRepository {
           headers: {HttpHeaders.authorizationHeader: 'JWT ${authToken.value}'});
       final response = await _dio.get(_cardsPath, options: options);
 
-      final cards = (response.data as List<dynamic>).map((json) => KanbanCard.fromJson(json)).toList();
-      
+      final cards = (response.data as List<dynamic>)
+          .map((json) => KanbanCard.fromJson(json))
+          .toList();
+
       return ResultOf.successful(cards);
     } on DioError catch (e) {
       final failure = Failure(describeEnum(e.type));
       if (e.response != null) {
-        failure.data['response_data'] = e.response!.data;
+        final serializedErrors = (e.response!.data as Map<String, dynamic>).map(
+            (key, value) => MapEntry(
+                key, value is List ? value.join('\n') : value.toString()));
+
+        failure.data.addAll(serializedErrors);
       }
       failure.data['message'] = e.message;
 
