@@ -3,8 +3,8 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:kanban/bloc/auth_bloc.dart';
 import 'package:kanban/data/models/kanban_card.dart';
 import 'package:kanban/data/repositories/cards_repository.dart';
-import 'package:kanban/data/repositories/result/failure.dart';
-import 'package:kanban/data/repositories/result/result.dart';
+import 'package:kanban/common/resulting/failure.dart';
+import 'package:kanban/common/resulting/result.dart';
 
 part 'cards_event.dart';
 part 'cards_state.dart';
