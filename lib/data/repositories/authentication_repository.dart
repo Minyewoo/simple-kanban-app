@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:kanban/common/resulting/failure.dart';
+import 'package:kanban/common/resulting/result.dart';
 import 'package:kanban/data/models/token.dart';
-import 'package:kanban/data/repositories/result/failure.dart';
-import 'package:kanban/data/repositories/result/result.dart';
 
 abstract class AuthenticationRepository {
   Future<AbstractResult> getToken(String username, String password);

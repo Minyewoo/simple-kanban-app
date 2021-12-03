@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:kanban/common/resulting/failure.dart';
+import 'package:kanban/common/resulting/result.dart';
 import 'package:kanban/data/models/kanban_card.dart';
 import 'package:kanban/data/models/token.dart';
-import 'package:kanban/data/repositories/result/failure.dart';
-import 'package:kanban/data/repositories/result/result.dart';
 
 abstract class CardsRepository {
   Future<AbstractResult> getCards(Token authToken);

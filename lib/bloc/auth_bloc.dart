@@ -1,9 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:kanban/common/resulting/failure.dart';
+import 'package:kanban/common/resulting/result.dart';
 import 'package:kanban/data/models/token.dart';
 import 'package:kanban/data/repositories/authentication_repository.dart';
-import 'package:kanban/data/repositories/result/failure.dart';
-import 'package:kanban/data/repositories/result/result.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -31,11 +31,10 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
   @override
   AuthState? fromJson(Map<String, dynamic> json) {
     final token = json['token'];
-    
-    if(token == null) {
+
+    if (token == null) {
       return const AuthState.initial();
-    }
-    else {
+    } else {
       return AuthState.tokenReceived(Token(token));
     }
   }
