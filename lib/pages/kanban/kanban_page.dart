@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kanban/bloc/auth_bloc.dart';
 import 'package:kanban/bloc/cards_bloc.dart';
 import 'package:kanban/data/models/kanban_card.dart';
+import 'package:kanban/di/injection.dart';
 import 'package:kanban/pages/login/login_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -24,7 +25,7 @@ class _KanbanPageState extends State<KanbanPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthInitial) {
-          Navigator.popAndPushNamed(context, LoginPage.routeName);
+          Navigator.of(context).popAndPushNamed(LoginPage.routeName);
         }
       },
       child: BlocConsumer<CardsBloc, CardsState>(
@@ -39,15 +40,15 @@ class _KanbanPageState extends State<KanbanPage> {
         },
         builder: (context, state) {
           if (state is CardsInitial) {
-            context.read<CardsBloc>().add(const GetCards());
+            getIt<CardsBloc>().add(const GetCards());
           }
 
           if (state is CardsRequested) {
-            return _buildLoadingIndication(context);
+            return _buildLoadingIndication(Theme.of(context));
           }
 
           if (state is CardsLoaded) {
-            return _buildKanbanContent(context, localizations, state);
+            return _buildKanbanContent(localizations, state);
           }
 
           return _buildSomethingWentWrongIndication(localizations);
@@ -56,14 +57,14 @@ class _KanbanPageState extends State<KanbanPage> {
     );
   }
 
-  DefaultTabController _buildKanbanContent(BuildContext context,
+  DefaultTabController _buildKanbanContent(
       AppLocalizations? localizations, CardsLoaded state) {
     return DefaultTabController(
       length: tabIndexes.length,
       child: Scaffold(
         appBar: AppBar(
           actions: [
-            _buildLogOutButton(context),
+            _buildLogOutButton(),
           ],
           bottom: _buildTabBar(localizations),
         ),
@@ -80,10 +81,10 @@ class _KanbanPageState extends State<KanbanPage> {
     );
   }
 
-  Scaffold _buildLoadingIndication(BuildContext context) {
+  Scaffold _buildLoadingIndication(ThemeData theme) {
     return Scaffold(
       body: Container(
-        color: Theme.of(context).backgroundColor.withOpacity(0.9),
+        color: theme.backgroundColor.withOpacity(0.9),
         child: const Center(
           child: CircularProgressIndicator(),
         ),
@@ -124,9 +125,9 @@ class _KanbanPageState extends State<KanbanPage> {
     );
   }
 
-  Widget _buildLogOutButton(BuildContext context) {
+  Widget _buildLogOutButton() {
     return InkWell(
-      onTap: () => context.read<AuthBloc>().add(const LogOut()),
+      onTap: () => getIt<AuthBloc>().add(const LogOut()),
       child: const Padding(
         padding: EdgeInsets.all(12.0),
         child: Icon(Icons.arrow_back),

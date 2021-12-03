@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:kanban/common/resulting/failure.dart';
 import 'package:kanban/common/resulting/result.dart';
 import 'package:kanban/data/models/token.dart';
@@ -9,6 +10,7 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 part 'auth_bloc.freezed.dart';
 
+@singleton
 class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
   final AuthenticationRepository _repository;
   AuthBloc(this._repository) : super(const AuthState.initial()) {

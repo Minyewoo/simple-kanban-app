@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kanban/bloc/auth_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kanban/di/injection.dart';
 import 'package:sprintf/sprintf.dart';
 
 class LoginForm extends StatefulWidget {
@@ -16,8 +17,8 @@ class _LoginFormState extends State<LoginForm> {
   String username = '';
   String password = '';
 
-  void submitLogin(BuildContext context) {
-    context.read<AuthBloc>().add(SignIn(username, password));
+  void submitLogin() {
+    getIt<AuthBloc>().add(SignIn(username, password));
   }
 
   @override
@@ -43,7 +44,7 @@ class _LoginFormState extends State<LoginForm> {
       onPressed: () {
         if (_formKey.currentState!.validate()) {
           _formKey.currentState!.save();
-          submitLogin(context);
+          submitLogin();
         }
       },
       child: Center(

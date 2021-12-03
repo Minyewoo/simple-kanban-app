@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthTokenReceived) {
-            Navigator.popAndPushNamed(context, KanbanPage.routeName);
+            Navigator.of(context).popAndPushNamed(KanbanPage.routeName);
           }
 
           if (state is AuthFailure) {

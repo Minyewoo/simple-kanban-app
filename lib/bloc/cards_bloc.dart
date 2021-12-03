@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:kanban/bloc/auth_bloc.dart';
 import 'package:kanban/data/models/kanban_card.dart';
 import 'package:kanban/data/repositories/cards_repository.dart';
@@ -10,16 +11,17 @@ part 'cards_event.dart';
 part 'cards_state.dart';
 part 'cards_bloc.freezed.dart';
 
+@singleton
 class CardsBloc extends HydratedBloc<CardsEvent, CardsState> {
   final CardsRepository _repository;
-  final AuthBloc _authCubit;
+  final AuthBloc _authBloc;
 
-  CardsBloc(this._repository, this._authCubit)
+  CardsBloc(this._repository, this._authBloc)
       : super(const CardsState.initial()) {
     on<GetCards>((event, emit) async {
       emit(const CardsState.requested());
 
-      final state = _authCubit.state;
+      final state = _authBloc.state;
       if (state is AuthTokenReceived) {
         final result = await _repository.getCards(state.token);
 

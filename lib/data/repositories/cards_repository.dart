@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:kanban/common/resulting/failure.dart';
 import 'package:kanban/common/resulting/result.dart';
 import 'package:kanban/data/models/kanban_card.dart';
@@ -11,6 +12,7 @@ abstract class CardsRepository {
   Future<AbstractResult> getCards(Token authToken);
 }
 
+@Injectable(as: CardsRepository)
 class ApiCardsRepository implements CardsRepository {
   final _dio = Dio();
   final _cardsPath = 'https://trello.backend.tests.nekidaem.ru/api/v1/cards/';
