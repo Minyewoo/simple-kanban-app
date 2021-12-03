@@ -29,12 +29,24 @@ class LoginPage extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          final defaultContent = [_buildLoginPage()];
+          final defaultContent = [
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(12),
+                child: SizedBox(height: 260, child: LoginForm()),
+              ),
+            )
+          ];
           if (state is AuthTokenRequested || state is AuthTokenReceived) {
             return Stack(
               children: [
                 ...defaultContent,
-                _buildSigningInOverlay(themeData),
+                Container(
+                  color: themeData.backgroundColor.withOpacity(0.9),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
               ],
             );
           }
@@ -42,24 +54,6 @@ class LoginPage extends StatelessWidget {
             children: defaultContent,
           );
         },
-      ),
-    );
-  }
-
-  Container _buildSigningInOverlay(ThemeData themeData) {
-    return Container(
-      color: themeData.backgroundColor.withOpacity(0.9),
-      child: const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
-
-  Widget _buildLoginPage() {
-    return const Center(
-      child: Padding(
-        padding: EdgeInsets.all(12),
-        child: LoginForm(),
       ),
     );
   }
