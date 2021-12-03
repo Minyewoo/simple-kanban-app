@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:kanban/common/resulting/failure.dart';
 import 'package:kanban/common/resulting/result.dart';
 import 'package:kanban/data/models/token.dart';
@@ -8,6 +9,7 @@ abstract class AuthenticationRepository {
   Future<AbstractResult> getToken(String username, String password);
 }
 
+@Injectable(as: AuthenticationRepository)
 class ApiAuthenticationRepository implements AuthenticationRepository {
   final _dio = Dio();
   final _loginPath =
