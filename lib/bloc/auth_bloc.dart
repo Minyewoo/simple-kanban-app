@@ -10,24 +10,30 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 part 'auth_bloc.freezed.dart';
 
-@singleton
+@lazySingleton
 class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
   final AuthenticationRepository _repository;
   AuthBloc(this._repository) : super(const AuthState.initial()) {
-    on<SignIn>((event, emit) async {
-      emit(const AuthState.tokenRequested());
+    on<SignIn>(_onSignIn);
 
-      final result = await _repository.getToken(event.username, event.password);
+    on<LogOut>(_onLogOut);
+  }
 
-      if (result.isSuccessful) {
-        emit(AuthState.tokenReceived(result.value));
-        //print((result.value as Token).value);
-      } else {
-        emit(AuthState.failure(result.failures.first));
-      }
-    });
+  Future<void> _onSignIn(SignIn event, Emitter<AuthState> emit) async {
+    emit(const AuthState.tokenRequested());
 
-    on<LogOut>((event, emit) => emit(const AuthState.initial()));
+    final result = await _repository.getToken(event.username, event.password);
+
+    if (result.isSuccessful) {
+      emit(AuthState.tokenReceived(result.value));
+      //print((result.value as Token).value);
+    } else {
+      emit(AuthState.failure(result.failures.first));
+    }
+  }
+
+  void _onLogOut(LogOut event, Emitter<AuthState> emit) {
+    emit(const AuthState.initial());
   }
 
   @override

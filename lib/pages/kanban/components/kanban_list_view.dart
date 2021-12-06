@@ -7,9 +7,10 @@ import 'listed_kanban_card.dart';
 class KanbanListView extends ListView {
   final List<KanbanCard> cards;
   final String idLabel;
-  KanbanListView({Key? key, this.cards = const [], this.idLabel = 'ID'})
+  KanbanListView({Key? key, EdgeInsetsGeometry? padding, this.cards = const [], this.idLabel = 'ID'})
       : super.separated(
           key: key,
+          padding: padding,
           itemBuilder: (context, index) =>
               ListedKanbanCard(card: cards[index], idLabel: idLabel),
           separatorBuilder: (context, index) => const SizedBox(height: 8),
