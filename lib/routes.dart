@@ -4,5 +4,5 @@ import 'package:kanban/pages/login/login_page.dart';
 
 final Map<String, WidgetBuilder> routes = {
   LoginPage.routeName: (context) => const LoginPage(),
-  KanbanPage.routeName: (context) => const KanbanPage(),
+  KanbanPage.routeName: (context) => KanbanPage(),
 };

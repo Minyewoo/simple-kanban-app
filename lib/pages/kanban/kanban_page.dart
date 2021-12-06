@@ -1,140 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kanban/bloc/auth_bloc.dart';
-import 'package:kanban/bloc/cards_bloc.dart';
 import 'package:kanban/data/models/kanban_card.dart';
-import 'package:kanban/pages/login/login_page.dart';
+import 'package:kanban/di/injection.dart';
+import 'package:kanban/pages/kanban/components/kanban_card_list.dart';
+import 'package:kanban/pages/kanban/components/labeled_tab_bar.dart';
+import 'package:kanban/pages/kanban/components/log_out_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kanban/pages/login/login_page.dart';
 
-class KanbanPage extends StatefulWidget {
+class KanbanPage extends StatelessWidget {
   static String routeName = '/kanban';
-  const KanbanPage({Key? key}) : super(key: key);
+  static const List<KanbanRow> _kanbanRows = KanbanRow.values;
 
-  @override
-  _KanbanPageState createState() => _KanbanPageState();
-}
+  final List<KanbanCardList> _cardList =
+      _kanbanRows.map((row) => KanbanCardList(row: row)).toList();
 
-class _KanbanPageState extends State<KanbanPage> {
-  final List<KanbanRow> tabIndexes = KanbanRow.values;
+  KanbanPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
+    final localizedLabels = _kanbanRows
+        .map((row) => _mapKanbanRowToLocalization(row, localizations!))
+        .toList();
 
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthInitial) {
-          Navigator.popAndPushNamed(context, LoginPage.routeName);
+          Navigator.of(context).popAndPushNamed(LoginPage.routeName);
         }
       },
-      child: BlocConsumer<CardsBloc, CardsState>(
-        listener: (context, state) {
-          if (state is CardsFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.failure.type),
+      child: DefaultTabController(
+        length: _kanbanRows.length,
+        child: Scaffold(
+          appBar: AppBar(
+            actions: [
+              LogOutButton(
+                onTap: () => getIt<AuthBloc>().add(const LogOut()),
               ),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is CardsInitial) {
-            context.read<CardsBloc>().add(const GetCards());
-          }
-
-          if (state is CardsRequested) {
-            return _buildLoadingIndication(context);
-          }
-
-          if (state is CardsLoaded) {
-            return _buildKanbanContent(context, localizations, state);
-          }
-
-          return _buildSomethingWentWrongIndication(localizations);
-        },
-      ),
-    );
-  }
-
-  DefaultTabController _buildKanbanContent(BuildContext context,
-      AppLocalizations? localizations, CardsLoaded state) {
-    return DefaultTabController(
-      length: tabIndexes.length,
-      child: Scaffold(
-        appBar: AppBar(
-          actions: [
-            _buildLogOutButton(context),
-          ],
-          bottom: _buildTabBar(localizations),
-        ),
-        body: _buildTabsContent(state, localizations),
-      ),
-    );
-  }
-
-  Scaffold _buildSomethingWentWrongIndication(AppLocalizations? localizations) {
-    return Scaffold(
-      body: Center(
-        child: Text(localizations!.smthWentWrong),
-      ),
-    );
-  }
-
-  Scaffold _buildLoadingIndication(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Theme.of(context).backgroundColor.withOpacity(0.9),
-        child: const Center(
-          child: CircularProgressIndicator(),
+            ],
+            bottom: LabeledTabBar(labels: localizedLabels),
+          ),
+          body: TabBarView(
+            children: _cardList,
+          ),
         ),
       ),
     );
   }
 
-  TabBarView _buildTabsContent(
-      CardsLoaded state, AppLocalizations? localizations) {
-    return TabBarView(
-      children: tabIndexes
-          .map(
-            (row) => ListView(
-              children: state.cards
-                  .where((card) => card.row == row)
-                  .map((card) => _buildCard(card, localizations!))
-                  .toList(),
-            ),
-          )
-          .toList(),
-    );
-  }
-
-  TabBar _buildTabBar(AppLocalizations? localizations) {
-    return TabBar(
-      tabs: tabIndexes
-          .map(
-            (row) => Tab(
-              child: Text(
-                _mapKanbanRowToString(row, localizations!),
-                maxLines: 1,
-                softWrap: false,
-                overflow: TextOverflow.fade,
-              ),
-            ),
-          )
-          .toList(),
-    );
-  }
-
-  Widget _buildLogOutButton(BuildContext context) {
-    return InkWell(
-      onTap: () => context.read<AuthBloc>().add(const LogOut()),
-      child: const Padding(
-        padding: EdgeInsets.all(12.0),
-        child: Icon(Icons.arrow_back),
-      ),
-    );
-  }
-
-  String _mapKanbanRowToString(KanbanRow row, AppLocalizations localizations) {
+  String _mapKanbanRowToLocalization(
+      KanbanRow row, AppLocalizations localizations) {
     switch (row) {
       case KanbanRow.onHold:
         return localizations.onHold;
@@ -145,20 +62,5 @@ class _KanbanPageState extends State<KanbanPage> {
       case KanbanRow.approved:
         return localizations.approved;
     }
-  }
-
-  Widget _buildCard(KanbanCard card, AppLocalizations localizations) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: ListTile(
-        tileColor: Colors.white,
-        subtitle: Text('${localizations.id}:${card.id}'),
-        title: Text(card.text),
-        shape: RoundedRectangleBorder(
-          side: BorderSide(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-    );
   }
 }
