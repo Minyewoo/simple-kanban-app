@@ -13,7 +13,7 @@ class KanbanPage extends StatelessWidget {
   static String routeName = '/kanban';
   static const List<KanbanRow> _kanbanRows = KanbanRow.values;
 
-  final List<KanbanCardList> _cardList =
+  final List<KanbanCardList> _cardLists =
       _kanbanRows.map((row) => KanbanCardList(row: row)).toList();
 
   KanbanPage({Key? key}) : super(key: key);
@@ -43,7 +43,7 @@ class KanbanPage extends StatelessWidget {
             bottom: LabeledTabBar(labels: localizedLabels),
           ),
           body: TabBarView(
-            children: _cardList,
+            children: _cardLists,
           ),
         ),
       ),
